@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bearing — Free Sales &amp; Demand Forecasting for Small Businesses</title>
+<meta name="description" content="Paste your recent sales or bookings and get an instant forecast, confidence range, and clear next step — free, no signup, runs entirely in your browser.">
+<link rel="canonical" href="https://atruebearing.com/">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://atruebearing.com/">
+<meta property="og:title" content="Bearing — Free Sales &amp; Demand Forecasting for Small Businesses">
+<meta property="og:description" content="Paste your recent sales or bookings and get an instant forecast, confidence range, and clear next step — free, no signup, runs entirely in your browser.">
+<meta property="og:image" content="https://atruebearing.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bearing — a free forecasting tool showing a rising demand trend on a bearing strip, with the tagline 'Know where you're headed before you get there.'">
+<meta property="og:site_name" content="Bearing">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bearing — Free Sales &amp; Demand Forecasting for Small Businesses">
+<meta name="twitter:description" content="Paste your recent sales or bookings and get an instant forecast, confidence range, and clear next step — free, no signup, runs entirely in your browser.">
+<meta name="twitter:image" content="https://atruebearing.com/og-image.png">
+<meta name="twitter:image:alt" content="Bearing — a free forecasting tool showing a rising demand trend on a bearing strip, with the tagline 'Know where you're headed before you get there.'">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #16232E;
+    --bg-raised: #1E2E3B;
+    --bg-card: #223546;
+    --ink: #E8E2D3;
+    --ink-soft: #9FB0BD;
+    --brass: #C9962C;
+    --brass-soft: rgba(201,150,44,0.16);
+    --rise: #4E9B87;
+    --rise-soft: rgba(78,155,135,0.16);
+    --fall: #C06A57;
+    --fall-soft: rgba(192,106,87,0.16);
+    --rule: #2C3D4B;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif;font-weight:600;margin:0 0 .4em 0;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+  a{color:inherit;}
+
+  header.site{border-bottom:1px solid var(--rule);padding:20px 0;}
+  .brandbar{display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;}
+  .brand .mark{width:24px;height:24px;position:relative;flex:none;}
+  .brand .mark svg{width:100%;height:100%;}
+  nav.site a{margin-left:26px;font-size:.92rem;color:var(--ink-soft);text-decoration:none;border-bottom:1px solid transparent;}
+  nav.site a:hover{border-bottom:1px solid var(--ink-soft);}
+
+  .hero{padding:56px 0 20px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-bottom:14px;display:block;}
+  .hero h1{font-size:clamp(2.1rem, 4vw, 3.1rem);max-width:15ch;}
+  .hero p.lede{color:var(--ink-soft);font-size:1.12rem;max-width:58ch;margin:14px 0 30px;}
+
+  .tool{background:var(--bg-raised);border:1px solid var(--rule);border-radius:3px;padding:26px;margin-bottom:14px;}
+  .tool-label{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .tool-label button.linklike{background:none;border:none;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--brass);text-transform:uppercase;letter-spacing:.08em;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;}
+  textarea#input{width:100%;min-height:150px;resize:vertical;border:1px solid var(--rule);background:var(--bg);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:.92rem;padding:14px;border-radius:2px;}
+  textarea#input::placeholder{color:#5C6D79;}
+  textarea#input:focus{outline:2px solid var(--brass);outline-offset:1px;}
+  .tool-actions{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap;}
+  button.primary{background:var(--brass);color:#1B1204;border:none;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:.95rem;padding:12px 22px;border-radius:2px;cursor:pointer;}
+  button.primary:hover{background:#DDA935;}
+  button.primary:focus-visible, button.linklike:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+  .hint{font-size:.85rem;color:var(--ink-soft);}
+  #errorMsg{color:var(--fall);font-size:.88rem;margin-top:10px;display:none;}
+
+  #results{display:none;margin-top:34px;}
+  #results.show{display:block;}
+
+  .bearing-block{background:var(--bg-raised);border:1px solid var(--rule);padding:24px;margin-bottom:22px;}
+  .bearing-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+  .bearing-top .change-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2.2rem;}
+  .bearing-top .change-word{font-family:'IBM Plex Mono',monospace;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);}
+  .strip{position:relative;height:8px;border-radius:4px;margin:26px 0 10px;background:linear-gradient(90deg, var(--fall) 0%, var(--rule) 50%, var(--rise) 100%);}
+  .pointer{position:absolute;top:-9px;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:12px solid var(--brass);transform:translateX(-50%);}
+  .strip-labels{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);}
+  .rec-text{margin-top:18px;font-size:1.02rem;color:var(--ink);border-top:1px solid var(--rule);padding-top:16px;}
+
+  .analysis-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start;}
+  @media (max-width:760px){.analysis-grid{grid-template-columns:1fr;}}
+  .chart-card{background:var(--bg-raised);border:1px solid var(--rule);padding:20px;}
+  .chart-legend{display:flex;gap:18px;margin-bottom:12px;font-size:.8rem;color:var(--ink-soft);flex-wrap:wrap;}
+  .chart-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend-swatch{width:14px;height:3px;display:inline-block;}
+
+  .stats-col .stat-card{background:var(--bg-raised);border:1px solid var(--rule);padding:16px 18px;margin-bottom:14px;}
+  .stats-col .stat-label{font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:6px;}
+  .stats-col .stat-value{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.3rem;}
+  .stats-col .stat-note{font-size:.82rem;color:var(--ink-soft);margin-top:4px;}
+
+  .disclaimer{margin-top:20px;font-size:.83rem;color:var(--ink-soft);border-top:1px solid var(--rule);padding-top:14px;}
+
+  section{padding:54px 0;border-top:1px solid var(--rule);}
+  section h2{font-size:1.7rem;margin-bottom:10px;}
+  section p.section-lede{color:var(--ink-soft);max-width:62ch;margin-bottom:30px;}
+
+  .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
+  @media (max-width:760px){.pillar-grid{grid-template-columns:1fr;}}
+  .pillar-cell{background:var(--bg-raised);padding:26px;}
+  .pillar-cell .num{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--brass);letter-spacing:.08em;margin-bottom:10px;}
+  .pillar-cell h3{font-size:1.15rem;}
+  .pillar-cell p{font-size:.9rem;color:var(--ink-soft);margin:0;}
+
+  .who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  @media (max-width:760px){.who-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:480px){.who-grid{grid-template-columns:1fr;}}
+  .who-card{border-top:2px solid var(--brass);padding-top:12px;}
+  .who-card h3{font-size:1rem;font-family:'IBM Plex Sans',sans-serif;font-weight:600;}
+  .who-card p{font-size:.87rem;color:var(--ink-soft);margin:6px 0 0;}
+
+  .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:760px){.pricing-grid{grid-template-columns:1fr;}}
+  .plan{border:1px solid var(--rule);background:var(--bg-raised);padding:26px;display:flex;flex-direction:column;}
+  .plan.highlight{border-color:var(--brass);position:relative;}
+  .plan.highlight::before{content:"Coming next";font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;position:absolute;top:-11px;left:24px;background:var(--brass);color:#1B1204;padding:3px 8px;}
+  .plan h3{font-size:1.1rem;margin-bottom:2px;}
+  .plan .price{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.9rem;margin:10px 0 14px;}
+  .plan .price span{font-family:'IBM Plex Sans',sans-serif;font-weight:400;font-size:.9rem;color:var(--ink-soft);}
+  .plan ul{list-style:none;padding:0;margin:0 0 20px;flex:1;}
+  .plan li{font-size:.88rem;color:var(--ink-soft);padding:6px 0;border-top:1px solid var(--rule);}
+  .plan li:first-child{border-top:none;}
+  .plan button{background:transparent;border:1px solid var(--brass);color:var(--brass);font-family:'IBM Plex Sans',sans-serif;font-weight:600;padding:10px;border-radius:2px;cursor:pointer;}
+  .plan.highlight button{background:var(--brass);color:#1B1204;}
+
+  footer{border-top:1px solid var(--rule);padding:30px 0;}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  footer p{font-size:.82rem;color:var(--ink-soft);margin:0;}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bearing",
+  "url": "https://atruebearing.com/",
+  "description": "Paste your recent sales or bookings and get an instant forecast, confidence range, and clear next step — free, no signup, runs entirely in your browser.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any (web-based)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap brandbar">
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="#C9962C" stroke-width="1.6"/>
+          <path d="M12 4 L14.2 11.2 L12 20 L9.8 11.2 Z" fill="#C9962C"/>
+        </svg>
+      </span>
+      Bearing
+    </div>
+    <nav class="site">
+      <a href="#forecast">Get a forecast</a>
+      <a href="#pillars">How it works</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="forecast" style="border-top:none;padding-top:56px;">
+    <div class="wrap">
+      <span class="eyebrow">Free forecasting for small operators</span>
+      <h1>Know where you're headed before you get there.</h1>
+      <p class="lede">Paste your last few weeks of sales, foot traffic, or bookings. Bearing shows you the trend, an honest confidence range, and one clear recommendation — in seconds, not a spreadsheet.</p>
+
+      <div class="tool">
+        <div class="tool-label">
+          <span>Paste your numbers, one per line (oldest first)</span>
+          <button class="linklike" id="exampleBtn" type="button">Try an example</button>
+        </div>
+        <textarea id="input" placeholder="380&#10;410&#10;395&#10;430&#10;...&#10;or with dates: 2026-06-01,380"></textarea>
+        <div class="tool-actions">
+          <button class="primary" id="analyzeBtn" type="button">Forecast forward</button>
+          <span class="hint">Runs entirely in your browser — nothing is stored or sent anywhere.</span>
+        </div>
+        <div id="errorMsg"></div>
+      </div>
+
+      <div id="results">
+        <div class="bearing-block">
+          <div class="bearing-top">
+            <div>
+              <div class="change-num" id="changeNum">—</div>
+              <div class="change-word" id="changeWord">—</div>
+            </div>
+          </div>
+          <div class="strip">
+            <div class="pointer" id="pointer" style="left:50%;"></div>
+          </div>
+          <div class="strip-labels"><span>Falling</span><span>Steady</span><span>Rising</span></div>
+          <div class="rec-text" id="recText">—</div>
+        </div>
+
+        <div class="analysis-grid">
+          <div class="chart-card">
+            <div class="chart-legend">
+              <span><span class="legend-swatch" style="background:var(--ink);"></span>Actual</span>
+              <span><span class="legend-swatch" style="background:var(--brass);border-top:2px dashed var(--brass);"></span>Forecast</span>
+              <span><span class="legend-swatch" style="background:var(--brass-soft);"></span>Confidence range</span>
+            </div>
+            <svg id="chartSvg" viewBox="0 0 640 280" style="width:100%;height:auto;"></svg>
+          </div>
+          <div class="stats-col">
+            <div class="stat-card">
+              <div class="stat-label">Next-period forecast</div>
+              <div class="stat-value" id="nextVal">—</div>
+              <div class="stat-note" id="nextRange">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Data points used</div>
+              <div class="stat-value" id="nPoints">—</div>
+              <div class="stat-note">More history = tighter confidence range.</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Method</div>
+              <div class="stat-value" style="font-size:1rem;">Linear trend + volatility band</div>
+              <div class="stat-note">Simple and transparent on purpose — no hidden model.</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="disclaimer">Bearing fits a straight-line trend to your recent numbers and bands it by your own historical volatility. It's a fast read, not a guarantee — unusual events (holidays, promotions, weather, one-off news) won't be anticipated. Sanity-check big decisions against your own judgment.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pillars">
+    <div class="wrap">
+      <h2>Built on three things</h2>
+      <p class="section-lede">Every part of Bearing answers to one of these — nothing else made the cut.</p>
+      <div class="pillar-grid">
+        <div class="pillar-cell">
+          <div class="num">01 · SPEED</div>
+          <h3>Paste and go</h3>
+          <p>No account, no spreadsheet template, no integration to configure. A result in the time it takes to paste.</p>
+        </div>
+        <div class="pillar-cell">
+          <div class="num">02 · ACCURACY</div>
+          <h3>Shows its work</h3>
+          <p>Every forecast comes with a confidence range built from your own data's volatility — not a single falsely-precise number.</p>
+        </div>
+        <div class="pillar-cell">
+          <div class="num">03 · FORWARD</div>
+          <h3>Ends in a decision</h3>
+          <p>Not just a chart — a plain-language read on whether to order more, staff up, or hold steady.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="who">
+    <div class="wrap">
+      <h2>Who reaches for this on a Tuesday morning</h2>
+      <p class="section-lede">Anyone tracking a recurring number who needs a fast, honest read on where it's headed.</p>
+      <div class="who-grid">
+        <div class="who-card"><h3>Cafés &amp; food trucks</h3><p>How much to prep before a weekend rush.</p></div>
+        <div class="who-card"><h3>Service businesses</h3><p>Whether booking demand is trending up before hiring.</p></div>
+        <div class="who-card"><h3>Etsy &amp; small e-commerce sellers</h3><p>How much stock to reorder before a sellout or a glut.</p></div>
+        <div class="who-card"><h3>Event &amp; venue organizers</h3><p>Expected attendance trend based on recent ticket sales.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <h2>Pricing</h2>
+      <p class="section-lede">Free while the core forecast lives entirely in your browser. Paid tier arrives once saved history and integrations do.</p>
+      <div class="pricing-grid">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price">$0</div>
+          <ul>
+            <li>Unlimited forecasts</li>
+            <li>Trend, confidence range &amp; recommendation</li>
+            <li>Nothing stored or logged</li>
+          </ul>
+          <button type="button">Currently active</button>
+        </div>
+        <div class="plan highlight">
+          <h3>Pro</h3>
+          <div class="price">$9<span>/month</span></div>
+          <ul>
+            <li>Everything in Free</li>
+            <li>Connect Shopify/Square/Calendly — no more copy-pasting numbers</li>
+            <li>Saved forecast history &amp; week-over-week tracking</li>
+            <li>Email digest: "here's next week's read"</li>
+          </ul>
+          <button type="button">Join waitlist</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Bearing produces a statistical estimate from the numbers you provide. It is not financial, inventory, or staffing advice — use it as one input among others.</p>
+    <p class="mono">bearing.app</p>
+  </div>
+</footer>
+
+<script>
+const EXAMPLE = "380\n410\n395\n430\n460\n610\n650\n400\n420\n415\n445\n470\n630\n680\n415\n435\n430\n460\n490\n650\n700";
+
+function escapeHtml(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function parseInput(text){
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l.length);
+  const points = [];
+  let allDated = lines.length > 0;
+  lines.forEach(line=>{
+    let date = null, valStr = line;
+    if(line.includes(',')){
+      const parts = line.split(',');
+      const d = new Date(parts[0].trim());
+      if(!isNaN(d.getTime())){ date = d; }
+      valStr = parts.slice(1).join(',').trim();
+    } else {
+      allDated = false;
+    }
+    const value = parseFloat(valStr.replace(/[^0-9.\-]/g,''));
+    if(!isNaN(value)) points.push({date, value});
+  });
+  if(allDated) points.sort((a,b)=> a.date - b.date);
+  return points;
+}
+
+function regression(points){
+  const n = points.length;
+  const xs = points.map((p,i)=>i);
+  const ys = points.map(p=>p.value);
+  const meanX = xs.reduce((a,b)=>a+b,0)/n;
+  const meanY = ys.reduce((a,b)=>a+b,0)/n;
+  let num=0, den=0;
+  for(let i=0;i<n;i++){ num += (xs[i]-meanX)*(ys[i]-meanY); den += (xs[i]-meanX)**2; }
+  const slope = den === 0 ? 0 : num/den;
+  const intercept = meanY - slope*meanX;
+  let ssRes = 0;
+  for(let i=0;i<n;i++){ const pred = intercept + slope*xs[i]; ssRes += (ys[i]-pred)**2; }
+  const dof = Math.max(n-2, 1);
+  const stdErr = Math.sqrt(ssRes/dof);
+  return {slope, intercept, stdErr};
+}
+
+function analyze(text){
+  const points = parseInput(text);
+  if(points.length < 4) return {error: "Add at least 4 numbers (one per line) to get a forecast."};
+  const {slope, intercept, stdErr} = regression(points);
+  const n = points.length;
+  const horizon = Math.min(7, Math.max(3, Math.round(n/3)));
+  const forecast = [];
+  for(let h=0; h<horizon; h++){
+    const idx = n + h;
+    const pred = intercept + slope*idx;
+    const band = 1.28 * stdErr;
+    forecast.push({ idx, pred: Math.max(0,pred), low: Math.max(0,pred-band), high: Math.max(0,pred+band) });
+  }
+  const lastWindow = Math.min(horizon, n);
+  const recentAvg = points.slice(-lastWindow).reduce((a,p)=>a+p.value,0)/lastWindow;
+  const forecastAvg = forecast.reduce((a,f)=>a+f.pred,0)/forecast.length;
+  const pctChange = recentAvg === 0 ? 0 : (forecastAvg - recentAvg)/recentAvg;
+  return {points, forecast, pctChange, forecastAvg, recentAvg, n, stdErr};
+}
+
+function buildChart(points, forecast){
+  const allVals = points.map(p=>p.value).concat(forecast.flatMap(f=>[f.low,f.high]));
+  const minY = Math.min(...allVals, 0);
+  const maxY = Math.max(...allVals);
+  const padY = (maxY-minY) * 0.12 || 10;
+  const yMin = Math.max(0, minY - padY);
+  const yMax = maxY + padY;
+  const totalPoints = points.length + forecast.length;
+  const padL = 40, padR = 14, padT = 14, padB = 26;
+  const chartW = 640 - padL - padR;
+  const chartH = 280 - padT - padB;
+  const sx = i => padL + (i/(totalPoints-1)) * chartW;
+  const sy = v => padT + chartH - ((v-yMin)/(yMax-yMin)) * chartH;
+
+  const histPts = points.map((p,i)=> `${sx(i)},${sy(p.value)}`).join(' ');
+  const lastHist = points.length-1;
+  const fcPts = [`${sx(lastHist)},${sy(points[lastHist].value)}`]
+    .concat(forecast.map((f,i)=> `${sx(lastHist+1+i)},${sy(f.pred)}`)).join(' ');
+
+  const bandTop = [`${sx(lastHist)},${sy(points[lastHist].value)}`]
+    .concat(forecast.map((f,i)=> `${sx(lastHist+1+i)},${sy(f.high)}`));
+  const bandBottom = forecast.map((f,i)=> `${sx(lastHist+1+i)},${sy(f.low)}`).reverse()
+    .concat([`${sx(lastHist)},${sy(points[lastHist].value)}`]);
+  const bandPoly = bandTop.concat(bandBottom).join(' ');
+
+  let dots = points.map((p,i)=> `<circle cx="${sx(i)}" cy="${sy(p.value)}" r="2.6" fill="#E8E2D3"/>`).join('');
+  dots += forecast.map((f,i)=> `<circle cx="${sx(lastHist+1+i)}" cy="${sy(f.pred)}" r="2.6" fill="#C9962C"/>`).join('');
+
+  // y-axis gridlines (3)
+  let grid = '';
+  for(let g=0; g<=2; g++){
+    const v = yMin + (yMax-yMin)*(g/2);
+    const y = sy(v);
+    grid += `<line x1="${padL}" y1="${y}" x2="${640-padR}" y2="${y}" stroke="#2C3D4B" stroke-width="1"/>`;
+    grid += `<text x="4" y="${y+4}" font-family="IBM Plex Mono, monospace" font-size="10" fill="#9FB0BD">${Math.round(v)}</text>`;
+  }
+
+  return `
+    ${grid}
+    <polygon points="${bandPoly}" fill="#C9962C" opacity="0.14"/>
+    <polyline points="${histPts}" fill="none" stroke="#E8E2D3" stroke-width="2"/>
+    <polyline points="${fcPts}" fill="none" stroke="#C9962C" stroke-width="2" stroke-dasharray="5,4"/>
+    ${dots}
+  `;
+}
+
+function render(data){
+  const resultsEl = document.getElementById('results');
+  const errEl = document.getElementById('errorMsg');
+  if(data.error){
+    errEl.textContent = data.error;
+    errEl.style.display = 'block';
+    resultsEl.classList.remove('show');
+    return;
+  }
+  errEl.style.display = 'none';
+
+  const {points, forecast, pctChange, forecastAvg, n, stdErr} = data;
+
+  const pct = Math.round(pctChange*1000)/10;
+  const changeNum = document.getElementById('changeNum');
+  const changeWord = document.getElementById('changeWord');
+  changeNum.textContent = (pct>0?'+':'') + pct + '%';
+  let word, color;
+  if(pctChange > 0.05){ word = 'Rising'; color = 'var(--rise)'; }
+  else if(pctChange < -0.05){ word = 'Falling'; color = 'var(--fall)'; }
+  else { word = 'Steady'; color = 'var(--ink-soft)'; }
+  changeWord.textContent = word + ' vs. recent average';
+  changeNum.style.color = color;
+
+  const norm = Math.max(-1, Math.min(1, pctChange/0.3));
+  const posPct = 50 + norm*50;
+  document.getElementById('pointer').style.left = posPct + '%';
+
+  let rec;
+  if(word === 'Rising') rec = `Demand looks like it's trending up about ${Math.abs(pct)}%. Worth ordering or staffing a bit ahead of that curve rather than reacting after the fact.`;
+  else if(word === 'Falling') rec = `Demand looks like it's trending down about ${Math.abs(pct)}%. Consider easing off orders or shifts to avoid excess before it builds up.`;
+  else rec = `Demand looks steady — no strong trend either direction. Current levels of stock/staffing look reasonable to hold.`;
+  document.getElementById('recText').textContent = rec;
+
+  document.getElementById('chartSvg').innerHTML = buildChart(points, forecast);
+
+  const next = forecast[0];
+  document.getElementById('nextVal').textContent = Math.round(next.pred);
+  document.getElementById('nextRange').textContent = `80% range: ${Math.round(next.low)}–${Math.round(next.high)}`;
+  document.getElementById('nPoints').textContent = n;
+
+  resultsEl.classList.add('show');
+  resultsEl.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+document.getElementById('analyzeBtn').addEventListener('click', ()=>{
+  const text = document.getElementById('input').value.trim();
+  if(!text) return;
+  render(analyze(text));
+});
+
+document.getElementById('exampleBtn').addEventListener('click', ()=>{
+  document.getElementById('input').value = EXAMPLE;
+  render(analyze(EXAMPLE));
+});
+</script>
+
+</body>
+</html>
