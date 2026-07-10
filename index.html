@@ -138,8 +138,16 @@
   .plan ul{list-style:none;padding:0;margin:0 0 20px;flex:1;}
   .plan li{font-size:.88rem;color:var(--ink-soft);padding:6px 0;border-top:1px solid var(--rule);}
   .plan li:first-child{border-top:none;}
-  .plan button{background:transparent;border:1px solid var(--brass);color:var(--brass);font-family:'IBM Plex Sans',sans-serif;font-weight:600;padding:10px;border-radius:2px;cursor:pointer;}
-  .plan.highlight button{background:var(--brass);color:#1B1204;}
+  .plan button, .plan a.plan-btn{background:transparent;border:1px solid var(--brass);color:var(--brass);font-family:'IBM Plex Sans',sans-serif;font-weight:600;padding:10px;border-radius:2px;cursor:pointer;text-align:center;text-decoration:none;display:block;}
+  .plan.highlight button, .plan.highlight a.plan-btn{background:var(--brass);color:#1B1204;}
+  .waitlist-form{display:none;margin-top:12px;flex-direction:column;gap:8px;}
+  .waitlist-form.show{display:flex;}
+  .waitlist-form input[type="email"]{background:var(--bg);border:1px solid var(--rule);color:var(--ink);padding:10px;border-radius:2px;font-family:'IBM Plex Sans',sans-serif;font-size:.92rem;}
+  .waitlist-form input[type="email"]:focus{outline:2px solid var(--brass);outline-offset:1px;}
+  .waitlist-status{font-size:.85rem;min-height:1.2em;display:none;}
+  .waitlist-status.success[data-fs-success]:not(:empty){display:block;color:var(--rise);}
+  .waitlist-status.error[data-fs-error]:not(:empty){display:block;color:var(--fall);}
+  .waitlist-field-error{font-size:.8rem;color:var(--fall);display:block;min-height:1.1em;}
 
   footer{border-top:1px solid var(--rule);padding:30px 0;}
   footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
@@ -302,7 +310,7 @@
             <li>Trend, confidence range &amp; recommendation</li>
             <li>Nothing stored or logged</li>
           </ul>
-          <button type="button">Currently active</button>
+          <a href="#forecast" class="plan-btn">Try it now ↑</a>
         </div>
         <div class="plan highlight">
           <h3>Pro</h3>
@@ -313,7 +321,14 @@
             <li>Saved forecast history &amp; week-over-week tracking</li>
             <li>Email digest: "here's next week's read"</li>
           </ul>
-          <button type="button">Join waitlist</button>
+          <button type="button" class="plan-btn" id="waitlistToggle">Join waitlist</button>
+          <form id="waitlistForm" class="waitlist-form" action="https://formspree.io/f/xjgqnkql" method="POST">
+            <input type="email" name="email" id="waitlistEmail" data-fs-field placeholder="you@yourbusiness.com" required>
+            <span data-fs-error="email" class="waitlist-field-error"></span>
+            <button type="submit" class="plan-btn" data-fs-submit-btn>Notify me</button>
+            <div data-fs-success class="waitlist-status success"></div>
+            <div data-fs-error class="waitlist-status error"></div>
+          </form>
         </div>
       </div>
     </div>
@@ -491,7 +506,21 @@ document.getElementById('exampleBtn').addEventListener('click', ()=>{
   document.getElementById('input').value = EXAMPLE;
   render(analyze(EXAMPLE));
 });
+
+// Waitlist form
+const waitlistToggle = document.getElementById('waitlistToggle');
+const waitlistForm = document.getElementById('waitlistForm');
+
+waitlistToggle.addEventListener('click', ()=>{
+  waitlistForm.classList.toggle('show');
+  if(waitlistForm.classList.contains('show')) document.getElementById('waitlistEmail').focus();
+});
+
+window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+formspree('initForm', { formElement: '#waitlistForm', formId: 'xjgqnkql' });
 </script>
+
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
 </body>
 </html>
